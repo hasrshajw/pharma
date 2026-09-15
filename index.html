@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar — REGALO</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Outfit:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ----- global variables ----- */
+        :root {
+            --font-main: 'IBM Plex Sans', sans-serif;
+            --color-dark-teal: #002726;
+            --color-teal-hover: #004D4B;
+            --color-white: #ffffff;
+            --font-weight-medium: 500;
+            --header-height: 72px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #f4f6f5;
+            min-height: 100vh;
+            padding-top: var(--header-height); /* space for fixed header */
+            overflow-x: hidden;
+        }
+
+        a, button, .nav-link, .auth-button, .mobile-nav-link, .mobile-auth-button, .menu-button {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        /* ========== NAVBAR ========== */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--header-height);
+            z-index: 100;
+            background-color: var(--color-white);
+            border-bottom: 1px solid transparent;
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .header.scrolled {
+            border-bottom-color: #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1280px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            width: 140px;
+            height: auto;
+            display: block;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links { display: flex; }
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-dark-teal);
+            text-decoration: none;
+            border-radius: 0;
+            transition: color 0.2s ease;
+            background: transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--color-teal-hover);
+            background: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-buttons {
+            display: none;
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .auth-buttons { display: flex; }
+        }
+
+        .auth-button {
+            padding: 8px 24px;
+            font-weight: var(--font-weight-medium);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+            border: 1px solid var(--color-dark-teal);
+            color: var(--color-dark-teal);
+            background: transparent;
+        }
+
+        .auth-button.submit {
+            background-color: var(--color-dark-teal);
+            color: var(--color-white);
+        }
+
+        .auth-button.submit:hover {
+            background-color: var(--color-teal-hover);
+            border-color: var(--color-teal-hover);
+            color: var(--color-white);
+        }
+
+        .auth-button:not(.submit):hover {
+            background-color: var(--color-dark-teal);
+            color: var(--color-white);
+        }
+
+        .menu-button {
+            display: flex;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f1f5f9;
+            cursor: pointer;
+            color: var(--color-dark-teal);
+            transition: background 0.1s;
+        }
+
+        @media (min-width: 768px) {
+            .menu-button { display: none; }
+        }
+
+        #mobileMenu {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: 100%;
+            background: var(--color-white);
+            z-index: 90;
+            transform: translateY(-110%);
+            transition: transform 0.3s ease-in-out;
+            padding: 24px 5%;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #mobileMenu.active {
+            transform: translateY(0);
+        }
+
+        .mobile-nav-link {
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--color-dark-teal);
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--color-teal-hover);
+            background: transparent;
+        }
+
+        .mobile-auth-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .mobile-auth-button {
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid var(--color-dark-teal);
+            color: var(--color-dark-teal);
+            background: transparent;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .mobile-auth-button.submit {
+            background-color: var(--color-dark-teal);
+            color: var(--color-white);
+        }
+
+        .mobile-auth-button.submit:hover {
+            background-color: var(--color-teal-hover);
+            border-color: var(--color-teal-hover);
+        }
+
+        .mobile-auth-button:not(.submit):hover {
+            background-color: var(--color-dark-teal);
+            color: var(--color-white);
+        }
+
+        #menuOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(2px);
+            z-index: 80;
+            display: none;
+        }
+
+        #menuOverlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="header">
+        <div class="header-container">
+            <div class="nav-left">
+                <a href="/" aria-label="Home">
+                    <img class="logo" src="assets/logo.png" alt="SyncSkill Logo">
+                </a>
+                <div class="nav-links">
+                    <a class="nav-link" href="/upskill">Upskill your Team</a>
+                    <a class="nav-link" href="/about-us">About</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="menu-button" id="mobileMenuButton" aria-label="Menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                <div class="auth-buttons">
+                    <a class="auth-button submit" href="/login">Login</a>
+                    <a class="auth-button" href="/apply">Apply as Mentor</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile drawer -->
+    <div id="mobileMenu">
+        <a href="/upskill" class="mobile-nav-link">Upskill your Team</a>
+        <a href="/about-us" class="mobile-nav-link">About</a>
+        <div class="mobile-auth-stack">
+            <a href="/login" class="mobile-auth-button submit">Login</a>
+            <a href="/apply" class="mobile-auth-button">Apply as Mentor</a>
+        </div>
+    </div>
+    <div id="menuOverlay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navbar
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const header = document.querySelector('.header');
+
+            function updateHeaderOnScroll() {
+                header.classList.toggle('scrolled', window.scrollY > 0);
+            }
+            window.addEventListener('scroll', updateHeaderOnScroll);
+            updateHeaderOnScroll();
+
+            const hamburgerSVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
+            const closeSVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>';
+
+            function setMenuIcon(isOpen) {
+                mobileMenuButton.innerHTML = isOpen ? closeSVG : hamburgerSVG;
+            }
+
+            function toggleMenu() {
+                const isActive = mobileMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                setMenuIcon(isActive);
+                document.body.style.overflow = isActive ? 'hidden' : '';
+            }
+
+            mobileMenuButton.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768 && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                    setMenuIcon(false);
+                }
+            });
+
+            setMenuIcon(false);
+        });
+    </script>
+</body>
+</html>
