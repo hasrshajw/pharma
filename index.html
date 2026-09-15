@@ -322,6 +322,14 @@
         }
         .navbar-cta:hover { background: var(--btn-primary-bg-hover); }
 
+        .drawer-cta {
+            display: flex;
+            width: 100%;
+            height: var(--row-height);
+            margin: 14px 0 2px;
+            justify-content: center;
+        }
+
         /* ========== MAIN CONTENT ========== */
         .main-content {
             display: flex;
@@ -412,14 +420,7 @@
                     </span>
                     <span class="nav-label">Careers</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <span class="icon icon-custom icon-popup">
-                        <span class="icon-normal"></span>
-                        <span class="icon-hover"></span>
-                        <span class="icon-active"></span>
-                    </span>
-                    <span class="nav-label">Contact</span>
-                </a>
+                <button class="navbar-cta drawer-cta">Contact</button>
             </nav>
         </div>
     </div>
@@ -435,8 +436,7 @@
                 <a class="desktop-nav-link" href="#">About</a>
                 <a class="desktop-nav-link" href="#">Products</a>
                 <a class="desktop-nav-link" href="#">Careers</a>
-                <a class="desktop-nav-link" href="#">Contact</a>
-                <button class="navbar-cta">Contact sales</button>
+                <button class="navbar-cta">Contact</button>
             </nav>
         </div>
     </header>
