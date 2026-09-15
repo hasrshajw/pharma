@@ -11,45 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Outfit:wght@700&display=swap" rel="stylesheet">
 
     <style>
-        /* ----- Regalo palette ----- */
+        /* ----- global variables ----- */
         :root {
             --font-main: 'IBM Plex Sans', sans-serif;
-
-            /* core */
-            --paper:      #FBFDFC;
-            --ink-900:    #12201F;
-            --ink-700:    #2B3E3B;
-            --ink-500:    #5B706B;
-            --ink-300:    #93A29E;
-
-            --mist-50:    #F4F8F7;
-            --mist-100:   #ECF2F1;
-            --mist-200:   #DCE6E4;
-            --mist-400:   #B7C5C2;
-            --mist-600:   #8B9C98;
-
-            --teal-50:    #EFF7F6;
-            --teal-100:   #DCEEEB;
-            --teal-200:   #B9DDD6;
-            --teal-300:   #94C9C0;
-            --teal-500:   #5FA39A;
-            --teal-700:   #396C66;
-            --teal-800:   #29504C;
-            --teal-900:   #1A3532;
-
-            --coral-500:  #FF6B4A;
-            --coral-600:  #E8532F;
-            --coral-700:  #C23F20;
-
-            /* semantic aliases used by the navbar */
-            --color-paper:        var(--paper);
-            --color-ink:          var(--ink-900);
-            --color-ink-soft:     var(--ink-700);
-            --color-teal:         var(--teal-700);
-            --color-teal-hover:   var(--teal-800);
-            --color-coral:        var(--coral-700);
-            --color-coral-hover:  var(--coral-600);
-
+            --color-dark-teal: #002726;
+            --color-teal-hover: #004D4B;
+            --color-white: #ffffff;
             --font-weight-medium: 500;
             --header-height: 72px;
         }
@@ -63,22 +30,15 @@
 
         body {
             font-family: var(--font-main);
-            background-color: var(--mist-50);
+            background-color: #f4f6f5;
             min-height: 100vh;
             padding-top: var(--header-height); /* space for fixed header */
             overflow-x: hidden;
         }
 
-        a, button, .nav-link, .auth-button, .mobile-nav-link, .mobile-auth-button, .menu-button {
+        a, button, .nav-link, .mobile-nav-link, .menu-button {
             -webkit-tap-highlight-color: transparent;
             outline: none;
-        }
-
-        a:focus-visible,
-        button:focus-visible {
-            outline: 2px solid var(--teal-700);
-            outline-offset: 2px;
-            border-radius: 8px;
         }
 
         /* ========== NAVBAR ========== */
@@ -88,7 +48,7 @@
             width: 100%;
             height: var(--header-height);
             z-index: 100;
-            background-color: var(--color-paper);
+            background-color: var(--color-white);
             border-bottom: 1px solid transparent;
             box-shadow: none;
             display: flex;
@@ -97,8 +57,8 @@
         }
 
         .header.scrolled {
-            border-bottom-color: var(--mist-200);
-            box-shadow: 0 4px 6px -1px rgba(18, 32, 31, 0.06);
+            border-bottom-color: #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .header-container {
@@ -110,21 +70,17 @@
             align-items: center;
         }
 
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-
         .logo {
             width: 140px;
             height: auto;
             display: block;
         }
 
+        /* ----- desktop nav links ----- */
         .nav-links {
             display: none;
-            gap: 8px;
+            align-items: center;
+            gap: 4px;
         }
 
         @media (min-width: 768px) {
@@ -132,78 +88,50 @@
         }
 
         .nav-link {
-            padding: 8px 16px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 40px;
+            padding: 0 18px;
+            font-size: 0.95rem;
             font-weight: var(--font-weight-medium);
-            color: var(--color-ink);
+            color: var(--color-dark-teal);
             text-decoration: none;
-            border-radius: 0;
+            line-height: 1;
             transition: color 0.2s ease;
-            background: transparent;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 4px;
+            height: 2px;
+            background-color: var(--color-teal-hover);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.2s ease;
         }
 
         .nav-link:hover {
-            color: var(--color-teal);
-            background: transparent;
+            color: var(--color-teal-hover);
         }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
+        .nav-link:hover::after {
+            transform: scaleX(1);
         }
 
-        .auth-buttons {
-            display: none;
-            gap: 12px;
-        }
-
-        @media (min-width: 768px) {
-            .auth-buttons { display: flex; }
-        }
-
-        .auth-button {
-            padding: 8px 24px;
-            font-weight: var(--font-weight-medium);
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-            border: 1px solid var(--color-teal);
-            color: var(--color-teal);
-            background: transparent;
-        }
-
-        /* Primary CTA — Vital Coral */
-        .auth-button.submit {
-            background-color: var(--color-coral);
-            border-color: var(--color-coral);
-            color: #ffffff;
-        }
-
-        .auth-button.submit:hover {
-            background-color: var(--color-coral-hover);
-            border-color: var(--color-coral-hover);
-            color: #ffffff;
-        }
-
-        /* Secondary — deep teal outline */
-        .auth-button:not(.submit):hover {
-            background-color: var(--color-teal);
-            border-color: var(--color-teal);
-            color: #ffffff;
-        }
-
+        /* ----- mobile menu trigger ----- */
         .menu-button {
             display: flex;
             padding: 8px;
-            border: 1px solid var(--mist-200);
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
-            background: var(--mist-100);
+            background: #f1f5f9;
             cursor: pointer;
-            color: var(--color-ink);
+            color: var(--color-dark-teal);
             transition: background 0.1s;
-        }
-
-        .menu-button:hover {
-            background: var(--mist-200);
         }
 
         @media (min-width: 768px) {
@@ -215,15 +143,14 @@
             top: var(--header-height);
             left: 0;
             width: 100%;
-            background: var(--color-paper);
+            background: var(--color-white);
             z-index: 90;
             transform: translateY(-110%);
             transition: transform 0.3s ease-in-out;
-            padding: 24px 5%;
-            box-shadow: 0 10px 15px -3px rgba(18, 32, 31, 0.08);
+            padding: 8px 5% 24px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            gap: 20px;
         }
 
         #mobileMenu.active {
@@ -231,61 +158,27 @@
         }
 
         .mobile-nav-link {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 500;
             text-decoration: none;
-            color: var(--color-ink);
-            padding: 8px 0;
+            color: var(--color-dark-teal);
+            padding: 14px 4px;
+            border-bottom: 1px solid #f1f5f9;
             transition: color 0.2s;
         }
 
+        .mobile-nav-link:last-child {
+            border-bottom: none;
+        }
+
         .mobile-nav-link:hover {
-            color: var(--color-teal);
-            background: transparent;
-        }
-
-        .mobile-auth-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--mist-200);
-        }
-
-        .mobile-auth-button {
-            width: 100%;
-            padding: 12px;
-            text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            border: 1px solid var(--color-teal);
-            color: var(--color-teal);
-            background: transparent;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .mobile-auth-button.submit {
-            background-color: var(--color-coral);
-            border-color: var(--color-coral);
-            color: #ffffff;
-        }
-
-        .mobile-auth-button.submit:hover {
-            background-color: var(--color-coral-hover);
-            border-color: var(--color-coral-hover);
-        }
-
-        .mobile-auth-button:not(.submit):hover {
-            background-color: var(--color-teal);
-            border-color: var(--color-teal);
-            color: #ffffff;
+            color: var(--color-teal-hover);
         }
 
         #menuOverlay {
             position: fixed;
             inset: 0;
-            background: rgba(18, 32, 31, 0.35);
+            background: rgba(0,0,0,0.3);
             backdrop-filter: blur(2px);
             z-index: 80;
             display: none;
@@ -294,10 +187,6 @@
         #menuOverlay.active {
             display: block;
         }
-
-        @media (prefers-reduced-motion: reduce) {
-            .header, #mobileMenu { transition: none; }
-        }
     </style>
 </head>
 <body>
@@ -305,43 +194,38 @@
     <!-- ===== NAVBAR ===== -->
     <header class="header">
         <div class="header-container">
-            <div class="nav-left">
-                <a href="/" aria-label="Home">
-                    <img class="logo" src="assets/regalo-logo.svg" alt="Regalo Logo">
-                </a>
-                <div class="nav-links">
-                    <a class="nav-link" href="/upskill">Upskill your Team</a>
-                    <a class="nav-link" href="/about-us">About</a>
-                </div>
-            </div>
-            <div class="nav-right">
-                <button class="menu-button" id="mobileMenuButton" aria-label="Menu">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-                <div class="auth-buttons">
-                    <a class="auth-button submit" href="/login">Login</a>
-                    <a class="auth-button" href="/apply">Apply as Mentor</a>
-                </div>
-            </div>
+            <a href="/" aria-label="Home">
+                <img class="logo" src="assets/logo.png" alt="SyncSkill Logo">
+            </a>
+
+            <nav class="nav-links" aria-label="Primary">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link" href="/products">Products</a>
+                <a class="nav-link" href="/careers">Careers</a>
+                <a class="nav-link" href="/contact">Contact</a>
+            </nav>
+
+            <button class="menu-button" id="mobileMenuButton" aria-label="Menu" aria-expanded="false">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
         </div>
     </header>
 
     <!-- Mobile drawer -->
-    <div id="mobileMenu">
-        <a href="/upskill" class="mobile-nav-link">Upskill your Team</a>
-        <a href="/about-us" class="mobile-nav-link">About</a>
-        <div class="mobile-auth-stack">
-            <a href="/login" class="mobile-auth-button submit">Login</a>
-            <a href="/apply" class="mobile-auth-button">Apply as Mentor</a>
-        </div>
-    </div>
+    <nav id="mobileMenu" aria-label="Primary mobile">
+        <a href="/" class="mobile-nav-link">Home</a>
+        <a href="/about" class="mobile-nav-link">About</a>
+        <a href="/products" class="mobile-nav-link">Products</a>
+        <a href="/careers" class="mobile-nav-link">Careers</a>
+        <a href="/contact" class="mobile-nav-link">Contact</a>
+    </nav>
     <div id="menuOverlay"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Navbar
             const mobileMenu = document.getElementById('mobileMenu');
             const mobileMenuButton = document.getElementById('mobileMenuButton');
             const menuOverlay = document.getElementById('menuOverlay');
@@ -358,6 +242,7 @@
 
             function setMenuIcon(isOpen) {
                 mobileMenuButton.innerHTML = isOpen ? closeSVG : hamburgerSVG;
+                mobileMenuButton.setAttribute('aria-expanded', String(isOpen));
             }
 
             function toggleMenu() {
