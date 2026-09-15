@@ -2,269 +2,396 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navbar — REGALO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Regalo – Dashboard</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Outfit:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Preload SVG icons for mobile drawer -->
+    <link rel="preload" as="image" href="./assets/dashboard.svg">
+    <link rel="preload" as="image" href="./assets/hover_dashboard.svg">
+    <link rel="preload" as="image" href="./assets/fill_dashboard.svg">
+    <link rel="preload" as="image" href="./assets/inventory.svg">
+    <link rel="preload" as="image" href="./assets/hover_inventory.svg">
+    <link rel="preload" as="image" href="./assets/fill_inventory.svg">
+    <link rel="preload" as="image" href="./assets/coupons.svg">
+    <link rel="preload" as="image" href="./assets/hover_coupons.svg">
+    <link rel="preload" as="image" href="./assets/fill_coupons.svg">
+    <link rel="preload" as="image" href="./assets/site.svg">
+    <link rel="preload" as="image" href="./assets/hover_site.svg">
+    <link rel="preload" as="image" href="./assets/fill_site.svg">
+    <link rel="preload" as="image" href="./assets/popup.svg">
+    <link rel="preload" as="image" href="./assets/hover_popup.svg">
+    <link rel="preload" as="image" href="./assets/fill_popup.svg">
 
     <style>
-        /* ----- global variables ----- */
+        /* ========== GLOBAL VARIABLES ========== */
         :root {
-            --font-main: 'IBM Plex Sans', sans-serif;
-            --color-dark-teal: #002726;
-            --color-teal-hover: #004D4B;
-            --color-white: #ffffff;
-            --font-weight-medium: 500;
-            --header-height: 72px;
+            --text-sub: #6b7280;
+            --header-height-desktop: 80px;
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 90px;
+            --row-height: 52px;
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
+            --page-bg: #f4f5f7;
+            --text-color: rgb(24, 24, 26);
+            --icon-color: #6b7280;
+            --brand-primary: #673DE6;
+            --active-bg: #f4f0fa;
+            --hover-bg: #f3f4f6;
+            --border-subtle: #e5e7eb;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --shadow-premium: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --tooltip-bg: #1f2937;
+            --danger-color: #ef4444;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; text-decoration: none !important; }
         body {
-            font-family: var(--font-main);
-            background-color: #f4f6f5;
             min-height: 100vh;
-            padding-top: var(--header-height); /* space for fixed header */
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            color: var(--text-color);
             overflow-x: hidden;
         }
 
-        a, button, .nav-link, .mobile-nav-link, .menu-button {
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-        }
+        /* LOGO */
+        .brand-logo { display: flex; align-items: center; text-decoration: none; transition: all 0.3s; }
+        .brand-logo img { height: 45px; width: auto; display: block; }
+        .mini-logo { display: none; align-items: center; justify-content: center; }
+        .mini-logo img { height: 45px; width: auto; display: block; }
 
-        /* ========== NAVBAR ========== */
-        .header {
+        /* ICON SYSTEM (used only in mobile drawer) */
+        .icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; }
+        .icon-custom { position: relative; width: 24px; height: 24px; }
+        .icon-custom > span {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+        }
+        .icon-custom .icon-normal { display: block; }
+        .icon-custom .icon-hover, .icon-custom .icon-active { display: none; }
+        .nav-item:hover:not(.active) .icon-custom .icon-normal { display: none; }
+        .nav-item:hover:not(.active) .icon-custom .icon-hover { display: block; }
+        .nav-item.active .icon-custom .icon-normal,
+        .nav-item.active .icon-custom .icon-hover { display: none; }
+        .nav-item.active .icon-custom .icon-active { display: block; }
+
+        /* ICON FILE MAPPINGS */
+        .icon-dashboard .icon-normal  { background-image: url('./assets/dashboard.svg'); }
+        .icon-dashboard .icon-hover   { background-image: url('./assets/hover_dashboard.svg'); }
+        .icon-dashboard .icon-active  { background-image: url('./assets/fill_dashboard.svg'); }
+        .icon-inventory .icon-normal  { background-image: url('./assets/inventory.svg'); }
+        .icon-inventory .icon-hover   { background-image: url('./assets/hover_inventory.svg'); }
+        .icon-inventory .icon-active  { background-image: url('./assets/fill_inventory.svg'); }
+        .icon-coupons .icon-normal    { background-image: url('./assets/coupons.svg'); }
+        .icon-coupons .icon-hover     { background-image: url('./assets/hover_coupons.svg'); }
+        .icon-coupons .icon-active    { background-image: url('./assets/fill_coupons.svg'); }
+        .icon-site .icon-normal       { background-image: url('./assets/site.svg'); }
+        .icon-site .icon-hover        { background-image: url('./assets/hover_site.svg'); }
+        .icon-site .icon-active       { background-image: url('./assets/fill_site.svg'); }
+        .icon-popup .icon-normal      { background-image: url('./assets/popup.svg'); }
+        .icon-popup .icon-hover       { background-image: url('./assets/hover_popup.svg'); }
+        .icon-popup .icon-active      { background-image: url('./assets/fill_popup.svg'); }
+
+        /* ========== MOBILE HEADER & DRAWER ========== */
+        .m-header {
+            height: 72px; background: #fff; border-bottom: 1px solid var(--border-subtle);
+            align-items: center; justify-content: space-between;
+            padding: 0 16px; position: fixed; top: 0; width: 100%; z-index: 1000;
+            display: flex;
+        }
+        .m-menu-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #e5e7eb; background: #f9fafb; display: flex; align-items: center; justify-content: center; }
+        .m-menu-lines { width: 18px; height: 14px; position: relative; }
+        .m-menu-lines::before, .m-menu-lines::after, .m-menu-lines span { content: ""; position: absolute; left: 0; right: 0; height: 2px; background: #111827; border-radius: 10px; }
+        .m-menu-lines::before { top: 0; }
+        .m-menu-lines span { top: 6px; }
+        .m-menu-lines::after { bottom: 0; }
+        .m-overlay {
+            position: fixed; inset: 0; background: rgba(15,23,42,0.45); opacity: 0;
+            pointer-events: none; transition: 0.25s; z-index: 2000;
+        }
+        .m-overlay.open { opacity: 1; pointer-events: auto; }
+        .m-drawer {
+            position: absolute; left: 0; top: 0; width: 300px; max-width: 85vw; height: 100%;
+            background: #fff; transform: translateX(-100%); transition: 0.25s;
+            display: flex; flex-direction: column; overflow-y: auto;
+        }
+        .m-overlay.open .m-drawer { transform: translateX(0); }
+        .m-drawer-header { height: 80px; padding: 0 20px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .m-drawer-close { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; background: #f9fafb; }
+        .m-drawer-close-icon { width: 14px; height: 14px; position: relative; }
+        .m-drawer-close-icon::before, .m-drawer-close-icon::after { content: ""; position: absolute; inset: 0; margin: auto; width: 14px; height: 2px; background: #111827; }
+        .m-drawer-close-icon::before { transform: rotate(45deg); }
+        .m-drawer-close-icon::after { transform: rotate(-45deg); }
+        .m-drawer-nav { padding: 20px 12px; flex: 1; }
+
+        /* Mobile nav items */
+        .nav-item {
+            position: relative; display: flex; align-items: center; height: var(--row-height);
+            padding: 0 16px; margin: 2px 0; border-radius: var(--radius-md); gap: 14px;
+            cursor: pointer; color: var(--text-color); text-decoration: none;
+            transition: background 0.2s, color 0.2s; white-space: nowrap; user-select: none;
+        }
+        .nav-item:hover { background: var(--hover-bg); }
+        .nav-item.active { background: var(--active-bg); color: var(--brand-primary); font-weight: 700; }
+
+        /* ========== DESKTOP TOP NAVBAR ========== */
+        .desktop-navbar {
+            display: none; /* hidden on mobile, shown on desktop */
             position: fixed;
             top: 0;
             width: 100%;
-            height: var(--header-height);
-            z-index: 100;
-            background-color: var(--color-white);
-            border-bottom: 1px solid transparent;
-            box-shadow: none;
-            display: flex;
+            height: var(--header-height-desktop);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            z-index: 1000;
             align-items: center;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            justify-content: center;
         }
-
-        .header.scrolled {
-            border-bottom-color: #f1f5f9;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-container {
+        .desktop-navbar-container {
             width: 90%;
-            margin: 0 auto;
             max-width: 1280px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .logo {
-            width: 140px;
-            height: auto;
-            display: block;
+        .desktop-logo img {
+            height: 45px;
+            width: auto;
         }
-
-        /* ----- desktop nav links ----- */
-        .nav-links {
-            display: none;
+        .desktop-nav-links {
+            display: flex;
             align-items: center;
             gap: 4px;
         }
-
-        @media (min-width: 768px) {
-            .nav-links { display: flex; }
-        }
-
-        .nav-link {
+        .desktop-nav-link {
             position: relative;
             display: flex;
             align-items: center;
             height: 40px;
             padding: 0 18px;
             font-size: 0.95rem;
-            font-weight: var(--font-weight-medium);
-            color: var(--color-dark-teal);
+            font-weight: 500;
+            color: var(--text-color);
             text-decoration: none;
             line-height: 1;
-            transition: color 0.2s ease;
+            border-radius: 8px;
+            transition: color 0.2s ease, background 0.2s ease;
         }
-
-        .nav-link::after {
+        .desktop-nav-link::after {
             content: "";
             position: absolute;
             left: 18px;
             right: 18px;
             bottom: 4px;
             height: 2px;
-            background-color: var(--color-teal-hover);
+            background-color: var(--brand-primary);
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.2s ease;
         }
-
-        .nav-link:hover {
-            color: var(--color-teal-hover);
+        .desktop-nav-link:hover {
+            color: var(--brand-primary);
         }
-
-        .nav-link:hover::after {
+        .desktop-nav-link:hover::after {
+            transform: scaleX(1);
+        }
+        .desktop-nav-link.active {
+            background: var(--active-bg);
+            color: var(--brand-primary);
+            font-weight: 700;
+        }
+        .desktop-nav-link.active::after {
             transform: scaleX(1);
         }
 
-        /* ----- mobile menu trigger ----- */
-        .menu-button {
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
             display: flex;
-            padding: 8px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background: #f1f5f9;
-            cursor: pointer;
-            color: var(--color-dark-teal);
-            transition: background 0.1s;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 16px;
         }
 
-        @media (min-width: 768px) {
-            .menu-button { display: none; }
+        /* ========== COMING SOON ========== */
+        .coming-soon-container {
+            text-align: center;
+            max-width: 500px;
+        }
+        .coming-soon-icon {
+            font-size: 64px;
+            color: var(--brand-primary);
+            margin-bottom: 24px;
+            opacity: 0.8;
+        }
+        .coming-soon-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 12px;
+        }
+        .coming-soon-subtitle {
+            font-size: 16px;
+            color: var(--text-sub);
+            line-height: 1.6;
         }
 
-        #mobileMenu {
-            position: fixed;
-            top: var(--header-height);
-            left: 0;
-            width: 100%;
-            background: var(--color-white);
-            z-index: 90;
-            transform: translateY(-110%);
-            transition: transform 0.3s ease-in-out;
-            padding: 8px 5% 24px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
+        /* ========== RESPONSIVE ========== */
+        @media (min-width: 769px) {
+            .desktop-navbar { display: flex; }
+            .m-header { display: none !important; }
+            .main-content {
+                padding-top: var(--header-height-desktop);
+            }
         }
 
-        #mobileMenu.active {
-            transform: translateY(0);
-        }
-
-        .mobile-nav-link {
-            font-size: 1.05rem;
-            font-weight: 500;
-            text-decoration: none;
-            color: var(--color-dark-teal);
-            padding: 14px 4px;
-            border-bottom: 1px solid #f1f5f9;
-            transition: color 0.2s;
-        }
-
-        .mobile-nav-link:last-child {
-            border-bottom: none;
-        }
-
-        .mobile-nav-link:hover {
-            color: var(--color-teal-hover);
-        }
-
-        #menuOverlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(2px);
-            z-index: 80;
-            display: none;
-        }
-
-        #menuOverlay.active {
-            display: block;
+        @media (max-width: 768px) {
+            .desktop-navbar { display: none !important; }
+            .main-content {
+                padding-top: 80px; /* mobile header height */
+            }
+            .coming-soon-title { font-size: 24px; }
+            .coming-soon-subtitle { font-size: 14px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== NAVBAR ===== -->
-    <header class="header">
-        <div class="header-container">
-            <a href="/" aria-label="Home">
-                <img class="logo" src="assets/logo.png" alt="SyncSkill Logo">
-            </a>
+    <!-- ========== MOBILE HEADER ========== -->
+    <header class="m-header" id="mobile-header">
+        <button class="m-menu-btn" id="m-open-drawer">
+            <div class="m-menu-lines"><span></span></div>
+        </button>
+        <a href="#" class="brand-logo">
+            <img src="./assets/logo.png" alt="Regalo">
+        </a>
+        <div style="width:40px;"></div>
+    </header>
 
-            <nav class="nav-links" aria-label="Primary">
-                <a class="nav-link" href="/">Home</a>
-                <a class="nav-link" href="/about">About</a>
-                <a class="nav-link" href="/products">Products</a>
-                <a class="nav-link" href="/careers">Careers</a>
-                <a class="nav-link" href="/contact">Contact</a>
+    <!-- ========== MOBILE DRAWER OVERLAY ========== -->
+    <div class="m-overlay" id="m-overlay">
+        <div class="m-drawer">
+            <div class="m-drawer-header">
+                <span class="brand-logo">
+                    <img src="./assets/logo.png" alt="Regalo">
+                </span>
+                <button class="m-drawer-close" id="m-close-drawer">
+                    <div class="m-drawer-close-icon"></div>
+                </button>
+            </div>
+
+            <nav class="m-drawer-nav">
+                <!-- HOME ACTIVE -->
+                <a href="#" class="nav-item active">
+                    <span class="icon icon-custom icon-dashboard">
+                        <span class="icon-normal"></span>
+                        <span class="icon-hover"></span>
+                        <span class="icon-active"></span>
+                    </span>
+                    <span class="nav-label">Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon icon-custom icon-site">
+                        <span class="icon-normal"></span>
+                        <span class="icon-hover"></span>
+                        <span class="icon-active"></span>
+                    </span>
+                    <span class="nav-label">About</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon icon-custom icon-inventory">
+                        <span class="icon-normal"></span>
+                        <span class="icon-hover"></span>
+                        <span class="icon-active"></span>
+                    </span>
+                    <span class="nav-label">Products</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon icon-custom icon-coupons">
+                        <span class="icon-normal"></span>
+                        <span class="icon-hover"></span>
+                        <span class="icon-active"></span>
+                    </span>
+                    <span class="nav-label">Careers</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="icon icon-custom icon-popup">
+                        <span class="icon-normal"></span>
+                        <span class="icon-hover"></span>
+                        <span class="icon-active"></span>
+                    </span>
+                    <span class="nav-label">Contact</span>
+                </a>
             </nav>
+        </div>
+    </div>
 
-            <button class="menu-button" id="mobileMenuButton" aria-label="Menu" aria-expanded="false">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
+    <!-- ========== DESKTOP TOP NAVBAR ========== -->
+    <header class="desktop-navbar">
+        <div class="desktop-navbar-container">
+            <a href="#" class="desktop-logo">
+                <img src="./assets/logo.png" alt="Regalo">
+            </a>
+            <nav class="desktop-nav-links">
+                <a class="desktop-nav-link active" href="#">Home</a>
+                <a class="desktop-nav-link" href="#">About</a>
+                <a class="desktop-nav-link" href="#">Products</a>
+                <a class="desktop-nav-link" href="#">Careers</a>
+                <a class="desktop-nav-link" href="#">Contact</a>
+            </nav>
         </div>
     </header>
 
-    <!-- Mobile drawer -->
-    <nav id="mobileMenu" aria-label="Primary mobile">
-        <a href="/" class="mobile-nav-link">Home</a>
-        <a href="/about" class="mobile-nav-link">About</a>
-        <a href="/products" class="mobile-nav-link">Products</a>
-        <a href="/careers" class="mobile-nav-link">Careers</a>
-        <a href="/contact" class="mobile-nav-link">Contact</a>
-    </nav>
-    <div id="menuOverlay"></div>
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="main-content">
+        <div class="coming-soon-container">
+            <div class="coming-soon-icon">🚀</div>
+            <h1 class="coming-soon-title">Dashboard Coming Soon</h1>
+            <p class="coming-soon-subtitle">
+                We're building an amazing analytics and overview dashboard for Regalo.
+                Stay tuned for sales charts, order summaries, and real‑time insights.
+            </p>
+        </div>
+    </main>
 
+    <!-- ========== JAVASCRIPT ========== -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const header = document.querySelector('.header');
+        // ========== SVG PRELOAD ==========
+        [
+            './assets/dashboard.svg','./assets/hover_dashboard.svg','./assets/fill_dashboard.svg',
+            './assets/inventory.svg','./assets/hover_inventory.svg','./assets/fill_inventory.svg',
+            './assets/coupons.svg','./assets/hover_coupons.svg','./assets/fill_coupons.svg',
+            './assets/site.svg','./assets/hover_site.svg','./assets/fill_site.svg',
+            './assets/popup.svg','./assets/hover_popup.svg','./assets/fill_popup.svg'
+        ].forEach(src => { const i = new Image(); i.src = src; });
 
-            function updateHeaderOnScroll() {
-                header.classList.toggle('scrolled', window.scrollY > 0);
-            }
-            window.addEventListener('scroll', updateHeaderOnScroll);
-            updateHeaderOnScroll();
+        // ========== MOBILE DRAWER ==========
+        const mOverlay = document.getElementById('m-overlay');
+        document.getElementById('m-open-drawer').onclick = () => mOverlay.classList.add('open');
+        document.getElementById('m-close-drawer').onclick = () => mOverlay.classList.remove('open');
+        mOverlay.onclick = (e) => { if (e.target === mOverlay) mOverlay.classList.remove('open'); };
 
-            const hamburgerSVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
-            const closeSVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>';
-
-            function setMenuIcon(isOpen) {
-                mobileMenuButton.innerHTML = isOpen ? closeSVG : hamburgerSVG;
-                mobileMenuButton.setAttribute('aria-expanded', String(isOpen));
-            }
-
-            function toggleMenu() {
-                const isActive = mobileMenu.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
-                setMenuIcon(isActive);
-                document.body.style.overflow = isActive ? 'hidden' : '';
-            }
-
-            mobileMenuButton.addEventListener('click', toggleMenu);
-            menuOverlay.addEventListener('click', toggleMenu);
-
-            window.addEventListener('resize', () => {
-                if (window.innerWidth >= 768 && mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    menuOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                    setMenuIcon(false);
-                }
+        // Mobile nav active state
+        document.querySelectorAll('.m-drawer-nav .nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.m-drawer-nav .nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
             });
+        });
 
-            setMenuIcon(false);
+        // ========== DESKTOP NAV ACTIVE STATE ==========
+        document.querySelectorAll('.desktop-nav-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelectorAll('.desktop-nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
     </script>
 </body>
